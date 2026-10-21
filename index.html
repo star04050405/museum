@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>出发！非看不可的世界博物馆</title>
+<meta name="theme-color" content="#F7F5F0">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon-180.png">
+<link rel="manifest" href="manifest.json">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  background:#F7F5F0;color:#20242A;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+  min-height:100vh;overflow-x:hidden;
+}
+.wrap{max-width:680px;margin:0 auto;padding:clamp(30px,7vw,54px) 20px 70px}
+/* mast */
+.mast{text-align:center;margin-bottom:6px}
+.mast .en{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:15px;letter-spacing:.35em;color:#B9B4A9;text-transform:uppercase}
+.mast h1{font-size:clamp(27px,7.2vw,36px);font-weight:900;letter-spacing:.04em;margin:10px 0 4px;line-height:1.25}
+.mast h1 .bang{color:#FF6B35}
+.mast .sub{font-size:13px;color:#8B877D;letter-spacing:.14em;line-height:2}
+.mast .sub b{color:#20242A}
+.pbar{margin:22px auto 0;max-width:380px}
+.pbar .pt{display:flex;justify-content:space-between;font-size:11.5px;letter-spacing:.18em;color:#8B877D;margin-bottom:7px}
+.pbar .pt b{color:#20242A}
+.pbar .rail{height:8px;background:#E9E5DC;border-radius:99px;overflow:hidden}
+.pbar .fill{height:100%;width:0%;background:#FF6B35;border-radius:99px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+/* chips */
+.chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:26px 0 8px}
+.chip{border:1.5px solid #20242A;background:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700;letter-spacing:.08em;color:#20242A;cursor:pointer;font-family:inherit}
+.chip.on{background:#20242A;color:#fff}
+/* shelf */
+.sec{margin-top:30px}
+.sec-t{display:flex;align-items:baseline;gap:10px;margin:0 2px 14px}
+.sec-t .st-zh{font-size:17px;font-weight:900;letter-spacing:.06em}
+.sec-t .st-n{font-size:12px;color:#B9B4A9;font-weight:700}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(min-width:560px){.grid{grid-template-columns:1fr 1fr 1fr}}
+/* 封面卡 */
+.bk{position:relative;border-radius:6px 14px 14px 6px;overflow:hidden;cursor:pointer;
+  background:linear-gradient(160deg,#3E444D 0%,#2A2E35 100%);
+  aspect-ratio:3/4.15;box-shadow:0 10px 24px rgba(32,36,42,.16),inset 3px 0 0 rgba(255,255,255,.07);
+  display:flex;flex-direction:column;transition:transform .25s}
+.bk:active{transform:scale(.965)}
+.bk::before{content:'';position:absolute;left:0;top:0;bottom:0;width:7px;background:rgba(255,255,255,.09)}
+.bk .brand{background:#FF6B35;color:#fff;font-size:8.5px;font-weight:800;letter-spacing:.14em;padding:6px 10px 6px 16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk .no{position:absolute;top:34px;right:10px;font-family:Georgia,serif;font-style:italic;font-size:30px;color:rgba(255,255,255,.14);font-weight:700}
+.bk .body{flex:1;padding:14px 13px 10px 16px;display:flex;flex-direction:column}
+.bk .cc{font-size:10px;letter-spacing:.22em;color:#C8C2B4;font-weight:700}
+.bk .nm{color:#fff;font-size:16.5px;font-weight:900;letter-spacing:.03em;line-height:1.35;margin-top:7px}
+.bk .nm .vol{color:#FF9B6B;font-size:12px;font-weight:800;letter-spacing:.1em}
+.bk .bt{margin-top:auto;padding-top:8px;border-top:1px solid rgba(255,255,255,.14);font-size:10.5px;color:#B6B0A3;letter-spacing:.05em;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bk .star{position:absolute;top:0;right:0;width:0;height:0;border-style:solid;border-width:0 46px 46px 0;border-color:transparent #FF6B35 transparent transparent}
+.bk .star i{position:absolute;top:9px;right:-40px;color:#fff;font-size:10px;font-style:normal;font-weight:800;letter-spacing:.05em;transform:rotate(45deg);display:block;width:40px;text-align:center}
+.bk.want{outline:2.5px solid #FF6B35;outline-offset:-2.5px}
+/* sheet */
+.mask{position:fixed;inset:0;background:rgba(20,22,26,.55);opacity:0;pointer-events:none;transition:opacity .3s;z-index:50}
+.mask.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#FDFCFA;border-radius:22px 22px 0 0;
+  max-height:88vh;overflow-y:auto;transform:translateY(105%);transition:transform .38s cubic-bezier(.2,.8,.2,1);
+  padding:0 0 40px}
+.sheet.open{transform:translateY(0)}
+.grab{width:44px;height:5px;border-radius:99px;background:#DDD8CD;margin:12px auto 0}
+.sh-top{position:relative;background:linear-gradient(160deg,#3E444D 0%,#2A2E35 100%);color:#fff;padding:20px 24px 22px}
+.sh-top .brand{display:inline-block;background:#FF6B35;color:#fff;font-size:9px;font-weight:800;letter-spacing:.16em;padding:5px 10px;border-radius:99px}
+.sh-top .no{position:absolute;top:16px;right:20px;font-family:Georgia,serif;font-style:italic;font-size:44px;color:rgba(255,255,255,.13);font-weight:700}
+.sh-top h2{font-size:23px;font-weight:900;letter-spacing:.03em;margin-top:12px;line-height:1.35}
+.sh-top .loc{font-size:12px;color:#C8C2B4;letter-spacing:.12em;margin-top:6px}
+.sh-top .one{font-size:13px;color:#E8E4DA;line-height:1.9;margin-top:12px;font-family:Georgia,'Songti SC',serif;font-style:italic}
+.sh-body{padding:22px 24px 0}
+.sec-h{display:flex;align-items:center;gap:10px;margin:22px 0 12px}
+.sec-h .en{font-family:Georgia,serif;font-style:italic;font-size:12px;color:#B9B4A9;letter-spacing:.16em}
+.sec-h .zh{font-size:15px;font-weight:900;letter-spacing:.08em}
+.sec-h::after{content:'';flex:1;height:1px;background:#E9E5DC}
+.facts{display:flex;gap:8px;flex-wrap:wrap}
+.fact{background:#fff;border:1px solid #E9E5DC;border-radius:10px;padding:10px 13px;font-size:11.5px;color:#5B5850;letter-spacing:.05em;line-height:1.6;flex:1;min-width:100px}
+.fact b{display:block;color:#20242A;font-size:12.5px;font-weight:800;margin-bottom:2px}
+.bao{list-style:none}
+.bao li{background:#fff;border:1px solid #E9E5DC;border-radius:12px;padding:14px 15px;margin-bottom:9px;display:flex;gap:12px;align-items:flex-start}
+.bao .bn{flex:none;width:26px;height:26px;border-radius:50%;background:#FF6B35;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif}
+.bao .bt b{display:block;font-size:14.5px;font-weight:800;letter-spacing:.02em}
+.bao .bt span{display:block;font-size:12px;color:#8B877D;line-height:1.75;margin-top:4px}
+.colu{background:#F3F0E8;border-radius:12px;padding:14px 16px;margin-bottom:9px}
+.colu .ct{font-size:10.5px;font-weight:800;letter-spacing:.2em;color:#FF6B35;margin-bottom:6px}
+.colu .cb{font-size:12.5px;color:#5B5850;line-height:1.85}
+.act{display:flex;gap:10px;margin-top:24px}
+.btn{flex:1;border-radius:999px;padding:14px 0;font-size:14.5px;font-weight:800;letter-spacing:.1em;cursor:pointer;font-family:inherit;border:1.5px solid #20242A;transition:.2s}
+.btn.ghost{background:#fff;color:#20242A}
+.btn.ghost.on{background:#FFE9DD;border-color:#FF6B35;color:#C9420A}
+.btn.solid{background:#20242A;color:#fff}
+.btn.solid.on{background:#FF6B35;border-color:#FF6B35}
+.close{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:120px;height:28px;border:0;background:transparent;cursor:pointer;z-index:2}
+.foot{text-align:center;margin-top:52px;font-size:11px;color:#B9B4A9;letter-spacing:.15em;line-height:2.2}
+.foot b{color:#8B877D}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mast">
+    <div class="en">Museums of the World · Book Series</div>
+    <h1>出发！<span class="bang">非看不可</span>的世界博物馆</h1>
+    <div class="sub">浙江少年儿童出版社 · 日本朝日新闻出版 株式会社 编著<br><b>24</b> 座馆 · <b>16</b> 国 · <b>27</b> 册 · <b>2000+</b> 件镇馆之宝</div>
+    <div class="pbar">
+      <div class="pt"><span>我的书架</span><span><b id="pRead">0</b> / 27 册读过 · 想读 <b id="pWant">0</b></span></div>
+      <div class="rail"><div class="fill" id="pFill"></div></div>
+    </div>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div id="shelf"></div>
+  <div class="foot">
+    书内设「<b>镇馆三宝</b>」「<b>知道更多</b>」「<b>博物馆备忘录</b>」趣味版块<br>
+    七大洲 · 16 国 · 24 家博物馆 —— 足不出户，把 200 万年文明读进书架
+  </div>
+</div>
+
+<div class="mask" id="mask"></div>
+<div class="sheet" id="sheet">
+  <div class="grab"></div>
+  <button class="close" id="closeBtn" aria-label="关闭"></button>
+  <div id="sheetBody"></div>
+</div>
+
+<script>
+const B = [
+{no:1, vol:'', name:'秘鲁国家考古人类学历史博物馆', en:'National Museum of Archaeology, Anthropology and History of Peru', country:'秘鲁', city:'利马', continent:'南美洲', year:1822, type:'人类历史',
+ one:'整座安第斯文明的记忆库：从查文石雕到印加黄金，海拔四千米的天空在这里落地。',
+ bao:[['帕拉卡斯斗篷','两千年前绣工在布上绣出的神灵世界，一根线只有半毫米宽'],['莫奇卡陶器','陶罐上捏着战士、猎人与医生的日常，是南美最早的「照片」'],['印加金饰','太阳的子孙用黄金说话，每一道纹路都是山与神的形状']],
+ colu:['人物特写','海勒姆·宾厄姆——1911 年他顺着藤蔓爬上悬崖，把沉睡四百年的马丘比丘重新带回人间。']},
+{no:2, vol:'', name:'美国国家航空航天博物馆', en:'National Air and Space Museum', country:'美国', city:'华盛顿', continent:'北美洲', year:1976, type:'科技',
+ one:'人类离天空最近的书架：从十二秒的第一次飞行，到登月舱上布满的烧痕。',
+ bao:[['1903 莱特飞行器','在基蒂霍克只飞了 12 秒，却把人类送进了天空的时代'],['阿波罗 11 号指挥舱','从月球回来的舱体上，烧灼的痕是穿越大气层写下的日记'],['索尔维一号','第一枚把卫星送上天的火箭，从此夜空多了一颗人造星']],
+ colu:['迷你讲座','为什么登月舱「鹰」看起来薄得像纸？——太空里没有风，越轻越远。']},
+{no:3, vol:'', name:'大都会艺术博物馆', en:'The Metropolitan Museum of Art', country:'美国', city:'纽约', continent:'北美洲', year:1872, type:'艺术',
+ one:'一座博物馆装下整部艺术史：古埃及神庙在北翼，莫奈的花园在中庭，两百万件藏品在等你。',
+ bao:[['丹铎神庙','整座三千岁的埃及神庙漂洋过海，从尼罗河搬进了中央公园旁的展厅'],['华盛顿横渡特拉华河','巨型油画里风雪中的将军，画布宽到装得下整个决心'],['德加的小舞者','青铜裙摆里包着真实的纱裙，一个十四岁舞者永远的转身']],
+ colu:['博物馆备忘录','每年 Met Gala 盛装晚会就设在这座馆的台阶上，博物馆也是城市生活的舞台。']},
+{no:4, vol:'Ⅰ', name:'大英博物馆', en:'The British Museum Ⅰ', country:'英国', city:'伦敦', continent:'欧洲', year:1759, type:'综合文明',
+ one:'全世界第一个「公共」博物馆：八百万件藏品，把两百万年人类故事压进一个屋顶下。',
+ bao:[['罗塞塔石碑','同一句话的三种写法，成了破解古埃及文字的钥匙'],['帕特侬神庙雕塑','从雅典卫城山肩上「搬来」的大理石，至今仍是争论的焦点'],['女史箴图','顾恺之笔下的宫廷箴言，流落异乡的东方名卷']],
+ colu:['人物特写','罗林生在悬崖上拓下贝希斯敦铭文，破解了楔形文字——他把整座美索不达米亚读了出来。']},
+{no:5, vol:'', name:'巴基斯坦国家博物馆', en:'National Museum of Pakistan', country:'巴基斯坦', city:'卡拉奇', continent:'亚洲', year:1950, type:'古代文明',
+ one:'印度河与犍陀罗在此相遇：四千年前的城市文明与希腊风佛像，共用一排展柜。',
+ bao:[['犍陀罗佛像','希腊刻刀遇见佛陀面容，最早的佛像竟长着一张欧洲脸'],['摩亨佐·达罗文物','四千五百年前的印章文字至今无人能读，这座城市却早有了排水系统'],['苦行释迦像','瘦到肋骨分明的苦行者，石头也做得出风骨']],
+ colu:['迷你讲座','犍陀罗=希腊化+佛教：亚历山大东征留下的不只是战争，还有审美。']},
+{no:6, vol:'', name:'伊斯坦布尔考古博物馆', en:'Istanbul Archaeological Museums', country:'土耳其', city:'伊斯坦布尔', continent:'亚洲', year:1891, type:'古代文明',
+ one:'两洲之间的文明渡口：一条海峡边，堆着埃及、希腊、巴比伦与奥斯曼的全部记忆。',
+ bao:[['亚历山大石棺','不是亚历山大的棺，却是为他而刻——整座石棺就是一部大理石史诗'],['哭泣的石碑','腓尼基王子的墓碑上，悲伤的表情刻了三千年'],['特洛伊展柜','跨过达达尼尔海峡，神话里那座木马之城真的存在过']],
+ colu:['博物馆备忘录','博物馆就在托普卡帕宫老城旁——从拜占庭到奥斯曼，一街之内读两千年帝都。']},
+{no:7, vol:'', name:'美国自然历史博物馆', en:'American Museum of Natural History', country:'美国', city:'纽约', continent:'北美洲', year:1869, type:'自然科技',
+ one:'《博物馆奇妙夜》的取景地：蓝鲸吊在天花板上，恐龙在走廊尽头抬着头。',
+ bao:[['暴龙骨架','白垩纪霸主的骨架悬在半空，迈一步就是六千五百万年'],['蓝鲸模型','94% 真实大小，25 米长的「生命之最」悬在海洋厅头顶'],['非洲象群展','十一头实大的象迎面走来，是博物馆最著名的开场白']],
+ colu:['知道更多','馆里每颗星星、每块岩石的「资料卡」都由科学家手写——它同时是一座研究院。']},
+{no:8, vol:'', name:'那不勒斯国家考古博物馆', en:'Naples National Archaeological Museum', country:'意大利', city:'那不勒斯', continent:'欧洲', year:1777, type:'古代文明',
+ one:'庞贝的另一半搬进了这里：火山灰封存的两千年，罗马人的日常鲜活得像昨天。',
+ bao:[['庞贝马赛克','维苏威火山喷发前一刻的房间，连面包炉里的面包都还留着'],['法尔内塞公牛','整块大理石雕出最重的古代群像，中世纪人叫它「大理石的奇迹」'],['亚历山大马赛克','伊苏斯之战的马赛克复刻了那幅消失的希腊名画']],
+ colu:['迷你讲座','庞贝灰烬里留下的空腔灌进石膏——人形石膏像，是火山写下的最后传记。']},
+{no:9, vol:'Ⅱ', name:'大英博物馆', en:'The British Museum Ⅱ', country:'英国', city:'伦敦', continent:'欧洲', year:1759, type:'综合文明',
+ one:'再进大英：这一册把古希腊的陵墓、波斯的琉璃与死海的古卷一层层翻开。',
+ bao:[['涅瑞伊德斯纪念碑','整座希腊陵墓从海边搬进展厅，海之仙女至今绕柱而立'],['摩索拉斯王陵雕刻','世界七大奇迹仅存的雕刻，从土耳其的废墟里劫后余生'],['波特兰琉璃瓶','两千年前的罗马琉璃工艺，一层层彩釉像凝固的晚霞']],
+ colu:['知道更多','「策展人」这个词就诞生在大英博物馆——最初指「看管藏品的人」。']},
+{no:10, vol:'', name:'安纳托利亚文明博物馆', en:'Museum of Anatolian Civilizations', country:'土耳其', city:'安卡拉', continent:'亚洲', year:1921, type:'古代文明',
+ one:'在安卡拉的老粮仓里，藏着人类最早的村落、最早的和约与最早的「太阳」。',
+ bao:[['赫梯太阳圆盘','三千年前赫梯人的太阳图腾，安卡拉城徽就是照它画的'],['卡迭石和约银板','人类历史上第一份国际和平条约，刻在银板上'],['加泰土丘壁画','九千年前的新石器村落，墙上画着全世界最早的城市地图']],
+ colu:['人物特写','赫梯王哈图西里三世与埃及法老拉美西斯二世——两位大帝用一份和约教会世界什么叫谈判。']},
+{no:11, vol:'', name:'维也纳艺术史博物馆', en:'Kunsthistorisches Museum', country:'奥地利', city:'维也纳', continent:'欧洲', year:1891, type:'艺术',
+ one:'哈布斯堡王朝六百年的收藏，华丽得像一场永不散场的宫廷舞会。',
+ bao:[['切利尼盐罐','黄金雕出的海神与大地女神，一尊盐罐被称「雕塑界的蒙娜丽莎」'],['勃鲁盖尔《巴别塔》','十二幅勃鲁盖尔在这里，通天塔下的每一扇窗都有故事'],['维米尔《绘画艺术》','画家画自己画画的背影，光从左边窗口落进来']],
+ colu:['博物馆备忘录','大厅穹顶上画着奥地利艺术史的名人们——博物馆自己也在给自己写历史。']},
+{no:12, vol:'', name:'雅典国家考古博物馆', en:'National Archaeological Museum, Athens', country:'希腊', city:'雅典', continent:'欧洲', year:1829, type:'古代文明',
+ one:'希腊神话的实物档案库：荷马史诗里的黄金面具，和一台两千年前的「电脑」。',
+ bao:[['阿伽门农黄金面具','迈锡尼出土的黄金葬面，让荷马的史诗第一次有了脸'],['安提基特拉机械','两千年前青铜齿轮算出日食——被称为世界第一台计算机'],['宙斯青铜像','两米高的神正在掷出闪电，肌肉与衣袍全是风']],
+ colu:['迷你讲座','迈锡尼的黄金从哪里来？——荷马唱的不是神话，是记忆。']},
+{no:13, vol:'', name:'冬宫博物馆', en:'The State Hermitage Museum', country:'俄罗斯', city:'圣彼得堡', continent:'欧洲', year:1764, type:'艺术',
+ one:'女皇叶卡捷琳娜的私人趣味长成了三百五十万件藏品：金色大厅尽头，连猫都有自己的门。',
+ bao:[['孔雀钟','金孔雀每整点开屏打鸣——一座会报时的机械花园'],['伦勃朗《浪子回头》','晚年的伦勃朗把一生的光都给了这一跪'],['达·芬奇《柏诺瓦的圣母》','全世界存世不足二十幅达·芬奇，这里有两幅']],
+ colu:['博物馆备忘录','冬宫养猫传统始于叶卡捷琳娜时代——「冬宫猫」是馆里编制内的守卫。']},
+{no:14, vol:'', name:'法国国家自然历史博物馆', en:'Muséum national d\'Histoire naturelle', country:'法国', city:'巴黎', continent:'欧洲', year:1793, type:'自然科技',
+ one:'塞纳河边的老植物园长成了自然史圣殿：进化大廊厅里，生命排着队走向今天。',
+ bao:[['进化大廊厅','三千件标本列队而行，像一场生命的检阅式'],['巨鲸与长颈鹿标本','十九世纪的标本师让皮毛下的肌肉依然可见'],['居维叶与拉马克手稿','进化论的两位宿敌，手稿静静躺在同一座馆里']],
+ colu:['人物特写','拉马克第一个提出「生物会进化」，他死后五十年，达尔文替他赢了那场辩论。']},
+{no:15, vol:'', name:'史密森国家自然博物馆', en:'Smithsonian National Museum of Natural History', country:'美国', city:'华盛顿', continent:'北美洲', year:1910, type:'自然科技',
+ one:'145 克拉的蓝钻石在深柜里发光，人类大厅里露西正低头看自己的脚印。',
+ bao:[['希望蓝钻','传说被诅咒的蓝钻石，从路易十四一路「霉」到美国的保险柜'],['露西骨架','三百二十万年前的南方古猿——她站起来那一刻，人类开始了'],['非洲象标本大厅','实大的象群迎面走来，是这座馆最著名的开场白']],
+ colu:['博物馆备忘录','史密森的起源是一位从未到过美国的英国科学家的遗产捐赠。']},
+{no:16, vol:'', name:'秦始皇兵马俑博物馆', en:'Emperor Qinshihuang\'s Mausoleum Site Museum', country:'中国', city:'西安', continent:'亚洲', year:1979, type:'古代文明',
+ one:'杨家村的农民打井打出来的奇迹：八千军阵在地下站了两千年，等一个看他们的人。',
+ bao:[['跪射俑','唯一完整无损的俑：跪姿撑起全身重量，鞋底的针脚都数得清'],['一号铜车马','三千多个零件的青铜马车，伞盖上的纹路是失传的工艺'],['将军俑','军阵里最沉稳的那一个，铠甲的鱼鳞纹一片一片压着']],
+ colu:['知道更多','每个俑的脸都不一样——考古学家说，那是两千两百年前的「写生」。']},
+{no:17, vol:'', name:'东京国立博物馆', en:'Tokyo National Museum', country:'日本', city:'东京', continent:'亚洲', year:1872, type:'综合文明',
+ one:'日本最老的博物馆：从绳文的土偶到浮世绘的浪，一座馆读透东方审美的底色。',
+ bao:[['遮光器土偶','雪地护目镜造型的绳文土偶，是最神秘的日本「外星脸」'],['松林图屏风','长谷川等伯画的雾中松林，雾是留出来的'],['绳文火焰土器','一万年前把陶器做成跳动的火焰，美得毫无实用理由']],
+ colu:['博物馆备忘录','本馆旁的「表庆馆」是明治时代西洋楼——博物馆本身就是一件文物。']},
+{no:18, vol:'', name:'开罗埃及博物馆', en:'The Egyptian Museum, Cairo', country:'埃及', city:'开罗', continent:'非洲', year:1902, type:'古代文明',
+ one:'十万件文物挤在一座粉色老楼里：图坦卡蒙的黄金面具在这里，法老们在这里排排躺。',
+ bao:[['图坦卡蒙黄金面具','11 公斤黄金，眼瞳里嵌着黑曜石——少年法老的三千年凝视'],['拉美西斯二世像','九米高的花岗岩法老，文学史里叫他「拉美西斯大帝」'],['胡夫太阳船','大金字塔旁拆开的雪松木船，四千六百年没下过水']],
+ colu:['人物特写','霍华德·卡特打开墓门那一下：「我看见了奇迹。」——那是 1922 年 11 月 26 日。']},
+{no:19, vol:'', name:'肯尼亚国家博物馆', en:'National Museums of Kenya', country:'肯尼亚', city:'内罗毕', continent:'非洲', year:1910, type:'自然科技',
+ one:'人类从东非大裂谷走向世界，这里是人类「老家的客厅」。',
+ bao:[['图尔卡纳少年','160 万年前的完整骨架——他站起来的时候，还没有「人类」这个词'],['东非大裂谷展厅','人类走出非洲的第一步，脚印就保存在这里'],['斯瓦希里文明船模','印度洋季风把非洲、阿拉伯和中国连成一张网']],
+ colu:['知道更多','利基家族三代科学家在此挖了一百年——人类起源的证据，多半出自这个家族之手。']},
+{no:20, vol:'', name:'罗马国家博物馆', en:'National Roman Museum', country:'意大利', city:'罗马', continent:'欧洲', year:1889, type:'古代文明',
+ one:'把地下罗马搬上地面：浴场遗址上陈列着帝国最松弛、也最真实的时刻。',
+ bao:[['掷铁饼者（朗切洛蒂）','米隆原作的罗马大理石版——运动员肌肉里绷着一千年'],['休息的拳击手','青铜拳手坐在石头上喘气，拳套上的裂口是真打的痕迹'],['莉薇娅庄园壁画','皇后夏宫的花园壁画，两千年来花开不败']],
+ colu:['迷你讲座','罗马浴场=健身房+社交网络——帝国公民的一天从这里开始。']},
+{no:21, vol:'', name:'加拿大皇家泰瑞尔古生物博物馆', en:'Royal Tyrrell Museum', country:'加拿大', city:'德拉姆黑勒', continent:'北美洲', year:1985, type:'自然科技',
+ one:'荒漠里的恐龙圣殿：四十具真实骨架立在曾经的恐龙大道上。',
+ bao:[['黑美人暴龙','骨架以侧躺姿势出土，全世界保存最好的暴龙之一'],['阿尔伯塔龙群','一群同类恐龙死在一起——白垩纪的「全家福」'],['伯吉斯页岩化石','五亿三千万年前的生命大爆发，软体印痕清晰如昨']],
+ colu:['博物馆备忘录','博物馆建在恐龙骨头出露的荒谷里——出门就是现场，脚下就是地层。']},
+{no:22, vol:'Ⅰ', name:'卢浮宫博物馆', en:'The Louvre Ⅰ', country:'法国', city:'巴黎', continent:'欧洲', year:1793, type:'艺术',
+ one:'从王宫到世界第一大博物馆：玻璃金字塔下，三万八千件作品排队讲美术史。',
+ bao:[['蒙娜丽莎','她的微笑被防弹玻璃罩着，每年一千万人排队看她'],['萨莫色雷斯胜利女神','船头展翅的女神——头和手臂都不在了，风还在'],['断臂维纳斯','米洛的维纳斯：断了手臂的完美，成就了不完美的完美']],
+ colu:['人物特写','贝聿铭 1989 年在王宫庭院里放下玻璃金字塔——争议变成巴黎的新心跳。']},
+{no:23, vol:'', name:'墨西哥国家人类学博物馆', en:'National Museum of Anthropology', country:'墨西哥', city:'墨西哥城', continent:'北美洲', year:1964, type:'人类历史',
+ one:'中美洲文明的太阳神殿：阿兹特克、玛雅、奥尔梅克在一个大伞下各占一厅。',
+ bao:[['太阳历石','阿兹特克人把宇宙刻进一块 24 吨的圆石——第五个太阳的时代'],['帕卡尔大王玉面具','一百八十一块玉片拼出的死亡面容——玛雅王的永生'],['恰克穆尔像','斜躺的神捧着盘子接祭品，胸口是通往天空的门']],
+ colu:['知道更多','博物馆大庭院的石伞是「雨神」造型——墨西哥城的每一滴雨都有神管。']},
+{no:24, vol:'', name:'都灵埃及博物馆', en:'Museo Egizio', country:'意大利', city:'都灵', continent:'欧洲', year:1824, type:'古代文明',
+ one:'开罗之外最大的埃及馆藏：撒丁王国国王买下五千件文物，从此都灵有了尼罗河。',
+ bao:[['都灵王表纸莎草','一份古埃及「历史教科书」，把法老们从头数到尾'],['拉美西斯二世像','六米高的巨像迎接你进门——都灵人叫他「拉美西斯爷爷」'],['彩绘木乃伊盒','罗马时代的埃及人把肖像画在木乃伊上，眼神至今生动']],
+ colu:['人物特写','商博良破译象形文字的第一批素材，就寄存在都灵——这里是埃及学的产房。']},
+{no:25, vol:'Ⅲ', name:'大英博物馆', en:'The British Museum Ⅲ', country:'英国', city:'伦敦', continent:'欧洲', year:1759, type:'综合文明',
+ one:'第三册走进世界的每一个角落：两河、波斯、非洲与太平洋，藏品没有国界。',
+ bao:[['乌尔军旗','四千六百年前的「马赛克连环画」，讲一场苏美尔人的战争与和平'],['拉美西斯二世胸像','雪莱为他写诗时，法老已经沉默了三千年'],['贝宁铜雕','西非王国的宫廷铜版，雕刻精度让欧洲人当场沉默']],
+ colu:['博物馆备忘录','大英博物馆藏品八百万件——逛完每一件需要六年，按册读刚刚好。']},
+{no:26, vol:'', name:'卫城博物馆', en:'Acropolis Museum', country:'希腊', city:'雅典', continent:'欧洲', year:2009, type:'艺术',
+ one:'建在考古遗址上的现代玻璃馆：脚下是雅典古城，头顶是帕特侬的真迹。',
+ bao:[['帕特侬大理石雕','整面雕带按原位排开，缺的空位留给伦敦的「回家那天」'],['伊瑞克提翁女像柱','六位大理石少女在神庙托起屋顶，五位在这里'],['胜利女神系鞋带浮雕','雅典娜弯腰系鞋带——神的日常，也是最美的衣褶']],
+ colu:['知道更多','三楼整层按神庙朝向倾斜复原——站在雕塑前，你站在雅典娜的高度。']},
+{no:27, vol:'Ⅱ', name:'卢浮宫博物馆', en:'The Louvre Ⅱ', country:'法国', city:'巴黎', continent:'欧洲', year:1793, type:'艺术',
+ one:'第二册从两河走向浪漫主义：汉谟拉比的石柱下，德拉克洛瓦正把革命画上天。',
+ bao:[['汉谟拉比法典石碑','「以眼还眼」最早刻在黑色玄武岩上，法典之上有太阳神像'],['自由引导人民','七月革命的街垒上，她一手旗一手枪——法国精神的化身'],['书记官坐像','四千五百年前的埃及公务员，眼睛用石英水晶嵌的']],
+ colu:['迷你讲座','卢浮宫的藏品按朝代和流派走「走廊」——把 27 册读完，你就自己会策展了。']}
+];
+
+const CONT = ['全部','亚洲','欧洲','非洲','北美洲','南美洲'];
+const KEY='museum-books-v1';
+let st = JSON.parse(localStorage.getItem(KEY) || '{}');
+st.want = st.want || []; st.read = st.read || [];
+function save(){ localStorage.setItem(KEY, JSON.stringify(st)); }
+
+const shelf=document.getElementById('shelf'), chips=document.getElementById('chips');
+let curC='全部';
+function grp(){
+  const order=['亚洲','欧洲','非洲','北美洲','南美洲'];
+  return order.map(c=>({c, items:B.filter(b=>b.continent===c)})).filter(g=>g.items.length);
+}
+function chipUI(){
+  chips.innerHTML = CONT.map(c=>'<button class="chip'+(c===curC?' on':'')+'" data-c="'+c+'">'+c+'</button>').join('');
+  chips.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{curC=b.dataset.c;chipUI();render();}));
+}
+function render(){
+  const gs = grp().filter(g=>curC==='全部'||g.c===curC);
+  shelf.innerHTML = gs.map(g=>
+    '<div class="sec"><div class="sec-t"><span class="st-zh">'+g.c+'</span><span class="st-n">'+g.items.length+' 册</span></div>'+
+    '<div class="grid">'+g.items.map(b=>
+      '<div class="bk'+(st.want.includes(b.no)?' want':'')+'" data-no="'+b.no+'">'+
+      (st.read.includes(b.no)?'<span class="star"><i>已读</i></span>':'')+
+      '<div class="brand">出发！非看不可的世界博物馆</div>'+
+      '<div class="no">'+b.no+'</div>'+
+      '<div class="body"><div class="cc">'+b.country+' · '+b.type+'</div>'+
+      '<div class="nm">'+b.name+(b.vol?' <span class="vol">Vol.'+b.vol+'</span>':'')+'</div>'+
+      '<div class="bt">'+b.bao[0][0]+'</div></div></div>').join('')+'</div></div>'
+  ).join('') +
+  '<div class="sec"><div class="sec-t"><span class="st-zh">附赠</span><span class="st-n">1 本</span></div><div class="grid">'+
+  '<div class="bk" style="opacity:.92" id="gcCard"><div class="brand" style="background:#8B877D">赠 · 世界博物馆打卡本</div><div class="no">&#10003;</div><div class="body"><div class="cc">边逛边涂 · 边学边画</div><div class="nm">世界博物馆<br>打卡本</div><div class="bt">读完一册来盖一枚章——你的进度就是你的足迹地图</div></div></div></div></div>';
+  shelf.querySelectorAll('.bk[data-no]').forEach(el=>el.addEventListener('click',()=>openSheet(+el.dataset.no)));
+  document.getElementById('gcCard').addEventListener('click',()=>{
+    toast('已读 '+st.read.length+' 册 · 想读 '+st.want.length+' 册 —— 读完 27 册，你就云逛完了 24 座馆、16 个国家');
+  });
+  progress();
+}
+function progress(){
+  document.getElementById('pRead').textContent=st.read.length;
+  document.getElementById('pWant').textContent=st.want.length;
+  document.getElementById('pFill').style.width=(st.read.length/27*100)+'%';
+}
+function toast(t){
+  let el=document.getElementById('tt');
+  if(!el){el=document.createElement('div');el.id='tt';el.style.cssText='position:fixed;left:50%;bottom:34px;transform:translateX(-50%);background:#20242A;color:#fff;padding:11px 20px;border-radius:99px;font-size:13px;letter-spacing:.05em;z-index:99;transition:opacity .3s;pointer-events:none;max-width:80vw;text-align:center';document.body.appendChild(el);}
+  el.textContent=t;el.style.opacity='1';
+  clearTimeout(el._t);el._t=setTimeout(()=>el.style.opacity='0',2200);
+}
+// sheet
+const mask=document.getElementById('mask'), sheet=document.getElementById('sheet'), sb=document.getElementById('sheetBody');
+function openSheet(no){
+  const b=B.find(x=>x.no===no);
+  sb.innerHTML =
+  '<div class="sh-top"><span class="brand">出发！非看不可的世界博物馆</span><span class="no">'+b.no+'</span>'+
+  '<h2>'+b.name+(b.vol?' <span style="color:#FF9B6B;font-size:15px">Vol.'+b.vol+'</span>':'')+'</h2>'+
+  '<div class="loc">'+b.en+' · '+b.city+' · '+b.country+' · '+b.year+' 年建馆</div>'+
+  '<div class="one">'+b.one+'</div></div>'+
+  '<div class="sh-body">'+
+  '<div class="sec-h"><span class="en">Facts</span><span class="zh">博物馆档案</span></div>'+
+  '<div class="facts"><div class="fact"><b>'+b.type+'</b>馆型</div><div class="fact"><b>'+b.country+'</b>国家 · '+b.city+'</div><div class="fact"><b>'+b.year+'</b>建馆年份</div></div>'+
+  '<div class="sec-h"><span class="en">Must-see</span><span class="zh">镇馆三宝</span></div>'+
+  '<ul class="bao">'+b.bao.map((x,i)=>'<li><span class="bn">'+(i+1)+'</span><span class="bt"><b>'+x[0]+'</b><span>'+x[1]+'</span></span></li>').join('')+'</ul>'+
+  '<div class="sec-h"><span class="en">Inside the book</span><span class="zh">书里还有</span></div>'+
+  '<div class="colu"><div class="ct">'+b.colu[0]+'</div><div class="cb">'+b.colu[1]+'</div></div>'+
+  '<div class="act">'+
+  '<button class="btn ghost'+(st.want.includes(no)?' on':'')+'" id="bWant">想读'+(st.want.includes(no)?' ✓':'')+'</button>'+
+  '<button class="btn solid'+(st.read.includes(no)?' on':'')+'" id="bRead">读过'+(st.read.includes(no)?' ✓':'')+'</button></div></div>';
+  document.getElementById('bWant').addEventListener('click',()=>{
+    const i=st.want.indexOf(no);
+    if(i>=0){st.want.splice(i,1);toast('已移出想读');}
+    else{st.want.push(no);toast('加入想读 —— 出发前的书签');}
+    save();render();openSheet(no);
+  });
+  document.getElementById('bRead').addEventListener('click',()=>{
+    const i=st.read.indexOf(no);
+    if(i>=0){st.read.splice(i,1);toast('已移出已读');}
+    else{st.read.push(no);toast(st.read.length===27?'🏆 27 册全部读完！你云逛完了 24 座馆':'读过 ✓ —— 第 '+st.read.length+' / 27 册');}
+    save();render();openSheet(no);
+  });
+  mask.classList.add('open'); sheet.classList.add('open');
+  document.body.style.overflow='hidden'; sheet.scrollTop=0;
+}
+function closeSheet(){
+  mask.classList.remove('open'); sheet.classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('closeBtn').addEventListener('click',closeSheet);
+mask.addEventListener('click',closeSheet);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSheet();});
+chipUI(); render();
+</script>
+</body>
+</html>
